@@ -2,7 +2,10 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const db = require('./config/mongoose-connection');
+const db = require("./config/mongoose-connection");
+const userRoute = require("./routes/userRoute");
+const productRoute = require("./routes/productRoute");
+const ownerRoute = require("./routes/ownerRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,5 +16,9 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
   res.send("hrry");
 });
+
+app.use("/owners", ownerRoute);
+app.use("/products", productRoute);
+app.use("/users", userRoute);
 
 app.listen(3000);
