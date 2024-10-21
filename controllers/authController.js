@@ -51,3 +51,8 @@ module.exports.loginUser = async (req, res) => {
     });
   }
 };
+
+module.exports.logOutUser = async (req, res) => {
+  req.flash("error", "Logged Out Sucessfully.");
+  res.cookie("token", "").redirect("/");
+};
