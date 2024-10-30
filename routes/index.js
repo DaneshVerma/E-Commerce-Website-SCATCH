@@ -15,9 +15,16 @@ router.get("/shop", isLoggedIn, async (req, res) => {
   res.render("shop", { products, success });
 });
 
+router.get("/cart", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({email: req.user.email}).populate("cart")
+  console.log(user.cart);
+  
+  res.render("cart", { user });
+});
+
 router.get("/addtocart/:productid", isLoggedIn, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email });
-  user.cart.push(req.params.productid);
+  user.cart.push(req.params.productid.trim());
   await user.save();
   req.flash("success", "added to cart");
   res.redirect("/shop");

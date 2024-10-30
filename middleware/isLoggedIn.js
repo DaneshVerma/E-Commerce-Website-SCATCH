@@ -11,6 +11,10 @@ module.exports = async function (req, res, next) {
     let user = await userModel
       .findOne({ email: decoded.email })
       .select("-password");
+      if (user=== null) {
+        req.flash("error", "you need to login first");
+        res.redirect("/");
+      }
     req.user = user;
     next();
   } catch (err) {

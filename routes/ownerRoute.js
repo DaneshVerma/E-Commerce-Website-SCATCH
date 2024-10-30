@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ownerModel = require("../models/owners-model");
 const dbgr = require("debug")("development: owner");
-
+const bcrypt = require("bcrypt");
 if (process.env.NODE_ENV === "development") {
   router.post("/create", async (req, res) => {
     let owner = await ownerModel.find();
@@ -13,13 +13,17 @@ if (process.env.NODE_ENV === "development") {
     }
 
     let { fullname, email, password } = req.body;
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(password, salt, async function (err, hash){
+        let createdOwner = await ownerModel.create({
+          fullname,
+          email,
+          password: hash
+        })
+        res.send(createdOwner).status(201);
+      })
+    })
 
-    let createdOwner = await ownerModel.create({
-      fullname,
-      email,
-      password,
-    });
-    res.send(createdOwner).status(201);
   });
 
   router.get("/admin", (req, res) => {
